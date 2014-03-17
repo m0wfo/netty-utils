@@ -6,7 +6,18 @@
 
     <groupId>com.mowforth</groupId>
     <artifactId>netty-utils</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <distributionManagement>
+        <repository>
+            <id>repo</id>
+            <url>https://github.com/m0wfo/m0wfo-mvn-repo/raw/master/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshot-repo</id>
+            <url>https://github.com/m0wfo/m0wfo-mvn-repo/raw/master/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
