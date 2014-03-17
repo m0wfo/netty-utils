@@ -15,7 +15,7 @@ public class ProxyHandler extends ByteToMessageDecoder {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyHandler.class);
 
-    public static final AttributeKey<InetAddress> PROXY_ADDRESS = AttributeKey.valueOf("proxy_address");
+    public static final AttributeKey<InetAddress> PROXY_ADDRESS = new AttributeKey("proxy_address");
 
     public enum ProxyType {
         STUD,
