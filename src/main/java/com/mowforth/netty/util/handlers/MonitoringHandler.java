@@ -8,6 +8,7 @@ import com.yammer.metrics.health.HealthCheckRegistry;
 import com.yammer.metrics.json.HealthCheckModule;
 import com.yammer.metrics.json.MetricsModule;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  * The endpoint can only be accessed locally, i.e. it's bound
  * to {@code 127.0.0.1}.</p>
  */
+@ChannelHandler.Sharable
 public class MonitoringHandler extends SimpleChannelInboundHandler<DefaultFullHttpRequest> {
 
     private static final String METRICS = "metrics";
