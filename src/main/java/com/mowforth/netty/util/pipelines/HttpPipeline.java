@@ -1,28 +1,27 @@
 package com.mowforth.netty.util.pipelines;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.mowforth.netty.util.handlers.AutoCloseHandler;
 import com.mowforth.netty.util.handlers.HttpCatchAllHandler;
 import com.mowforth.netty.util.handlers.HttpResponseDecorator;
-import com.mowforth.netty.util.handlers.MonitoringHandler;
-import com.yammer.metrics.MetricRegistry;
-import com.yammer.metrics.health.HealthCheckRegistry;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 
-import javax.inject.Inject;
-
 /**
- * Assembles a pipeline for a monitoring service.
+ * TODO document
  */
-public class MonitoringPipeline extends ChannelInitializer<Channel> {
+public class HttpPipeline extends ChannelInitializer<Channel> implements Pipeline {
 
-    private final MonitoringHandler monitoringHandler;
+    private final Injector injector;
+    private Class<? extends ChannelHandler>[] appHandlers;
 
     @Inject
-    public MonitoringPipeline(MetricRegistry metricRegistry, HealthCheckRegistry healthCheckRegistry) {
-        this.monitoringHandler = new MonitoringHandler(metricRegistry, healthCheckRegistry);
+    public HttpPipeline(Injector injector) {
+        this.injector = injector;
     }
 
     @Override
@@ -31,7 +30,14 @@ public class MonitoringPipeline extends ChannelInitializer<Channel> {
         ch.pipeline().addLast(new HttpObjectAggregator(1024 * 10));
         ch.pipeline().addLast(new AutoCloseHandler());
         ch.pipeline().addLast(new HttpResponseDecorator());
-        ch.pipeline().addLast(monitoringHandler);
+        for (Class<? extends ChannelHandler> handler : appHandlers) {
+            ch.pipeline().addLast(injector.getInstance(handler));
+        }
         ch.pipeline().addLast(new HttpCatchAllHandler());
+    }
+
+    @Override
+    public void setApplicationHandlers(Class<? extends ChannelHandler>... handlers) {
+        this.appHandlers = handlers;
     }
 }

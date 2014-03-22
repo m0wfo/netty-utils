@@ -22,12 +22,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handler for exposing metric & healthcheck data.
  *
- * <p>This provides an embedded Jetty instance to run
- * the {@literal MetricsServlet} and {@literal HealthCheckServlet}
- * servlets provided by the Yammer metrics library.</p>
- *
- * <p>Additionally the server lets you ping this node and get
- * instantaneous thread dumps.</p>
+ * <p>This provides equivalent functionality of an embedded
+ * Jetty instance to run the {@literal MetricsServlet}
+ * and {@literal HealthCheckServlet} servlets provided by the
+ * Yammer metrics library.</p>
  *
  * <p>The only configurable parameter is the port to listen on.
  * The endpoint can only be accessed locally, i.e. it's bound

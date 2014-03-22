@@ -3,10 +3,7 @@ package com.mowforth.netty.util.handlers;
 import com.google.common.net.MediaType;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.*;
 import io.netty.util.ReferenceCounted;
 
 import java.util.Date;
@@ -16,6 +13,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 
 public class HttpResponseDecorator extends MessageToMessageCodec<HttpRequest,HttpResponse> {
 
+    private HttpVersion version;
     private boolean isKeepAlive;
 
     @Override
@@ -37,6 +35,9 @@ public class HttpResponseDecorator extends MessageToMessageCodec<HttpRequest,Htt
             response.headers().set(CONTENT_TYPE, MediaType.PLAIN_TEXT_UTF_8.toString());
         }
 
+        // Set protocol version
+        response.setProtocolVersion(version);
+
         // Set keep-alive status
         if (isKeepAlive) {
             response.headers().set(CONNECTION, "Keep-Alive");
@@ -55,6 +56,8 @@ public class HttpResponseDecorator extends MessageToMessageCodec<HttpRequest,Htt
         if (request instanceof ReferenceCounted) {
             ((ReferenceCounted) request).retain();
         }
+
+        version = request.getProtocolVersion();
         isKeepAlive = HttpHeaders.isKeepAlive(request);
         out.add(request);
     }
