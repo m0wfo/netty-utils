@@ -14,7 +14,12 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 public class HttpResponseDecorator extends MessageToMessageCodec<HttpRequest,HttpResponse> {
 
     private HttpVersion version;
-    private boolean isKeepAlive;
+    private Boolean isKeepAlive;
+
+	public HttpResponseDecorator() {
+		this.version = HttpVersion.HTTP_1_1;
+		this.isKeepAlive = false;
+	}
 
     @Override
     protected void encode(ChannelHandlerContext ctx, HttpResponse response, List<Object> out) throws Exception {
@@ -23,7 +28,7 @@ public class HttpResponseDecorator extends MessageToMessageCodec<HttpRequest,Htt
         }
 
         // Add content length if necessary
-        if (!response.headers().contains(CONTENT_LENGTH)) {
+        if (!response.headers().contains(CONTENT_LENGTH) && !HttpHeaders.isTransferEncodingChunked(response)) {
             if (response instanceof DefaultFullHttpResponse) {
                 DefaultFullHttpResponse full = (DefaultFullHttpResponse) response;
                 HttpHeaders.setContentLength(response, full.content().readableBytes());

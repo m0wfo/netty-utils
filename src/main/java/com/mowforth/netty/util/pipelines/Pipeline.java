@@ -1,5 +1,6 @@
 package com.mowforth.netty.util.pipelines;
 
+import com.google.inject.Provider;
 import io.netty.channel.ChannelHandler;
 
 /**
@@ -7,5 +8,5 @@ import io.netty.channel.ChannelHandler;
  */
 public interface Pipeline extends ChannelHandler {
 
-    public void setApplicationHandlers(Class<? extends ChannelHandler>... handlers);
+    public void setApplicationHandlers(Provider<? extends ChannelHandler>... handlers);
 }

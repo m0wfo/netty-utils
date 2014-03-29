@@ -1,5 +1,6 @@
 package com.mowforth.netty.util.handlers;
 
+import com.google.common.base.Throwables;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -8,6 +9,8 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.ReferenceCounted;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A final catch-all handler for any (presumably invalid) events that made it to
@@ -20,6 +23,8 @@ import io.netty.util.ReferenceCounted;
 @ChannelHandler.Sharable
 public class HttpCatchAllHandler extends ChannelInboundHandlerAdapter {
 
+	private static final Logger LOG = LoggerFactory.getLogger(HttpCatchAllHandler.class);
+
     @Override
     public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof ReferenceCounted) {
@@ -30,7 +35,7 @@ public class HttpCatchAllHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        // TODO log the stack trace
+		LOG.error("Caught exception: {}", Throwables.getStackTraceAsString(cause));
         sendError(ctx);
     }
 

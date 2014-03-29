@@ -25,7 +25,7 @@ public class RestHandler extends MessageToMessageCodec<HttpRequest, HttpResponse
 
     @Override
     protected void encode(ChannelHandlerContext ctx, HttpResponse msg, List<Object> out) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override

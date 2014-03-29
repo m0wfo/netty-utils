@@ -2,6 +2,8 @@ package com.mowforth.netty.util.handlers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
 
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * TODO
  */
-public class JsonCodec<T> extends ByteToMessageCodec<T> {
+public class JsonCodec extends ByteToMessageCodec<Object> {
 
     private final ObjectMapper mapper;
 
@@ -21,12 +23,15 @@ public class JsonCodec<T> extends ByteToMessageCodec<T> {
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, T msg, ByteBuf out) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+    protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
+		ByteBufOutputStream stream = new ByteBufOutputStream(out);
+		mapper.writeValue(stream, msg);
     }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+		ByteBufInputStream stream = new ByteBufInputStream(in);
+		Object decoded = mapper.readValue(stream, Object.class);
+		out.add(decoded);
     }
 }
